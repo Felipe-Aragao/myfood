@@ -67,7 +67,23 @@ public class Facade {
         return eManager.getIdEmpresa(idDono, nome, indice);
     }
 
+    // Produto
 
+    public String criarProduto(String idEmpresa, String nome, float valor, String categoria) {
+        return "";
+    }
+
+    public void editarProduto(String id, String nome, float valor, String categoria) {
+        return;
+    }
+
+    public String getProduto(String nome, String idEmpresa, String atributo){
+        return "";
+    }
+
+    public String listarProduto(String idEmpresa) {
+        return "";
+    }
 
 
 }
