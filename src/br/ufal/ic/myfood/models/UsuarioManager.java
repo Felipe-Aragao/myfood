@@ -56,6 +56,15 @@ public class UsuarioManager {
         usuarios.add(new Cliente(nome, email, senha, endereco));
     }
 
+    public Usuario getUsuario(String id) {
+        for (Usuario user : usuarios) {
+            if (user.getId().equals(id)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     private void validarUsuario(String email, String nome, String senha, String endereco) throws Exception {
 
         if (nome == null || nome.isBlank()) {
