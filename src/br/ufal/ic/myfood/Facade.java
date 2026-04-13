@@ -4,12 +4,18 @@ import br.ufal.ic.myfood.exceptions.UsuarioJaExisteException;
 import br.ufal.ic.myfood.exceptions.UsuarioNaoExisteException;
 import br.ufal.ic.myfood.models.Usuario;
 import br.ufal.ic.myfood.models.UsuarioManager;
+import java.io.File;
 
 public class Facade {
 
     UsuarioManager uManager;
 
+    public Facade() {
+        this.uManager = new UsuarioManager();
+    }
+
     public void zerarSistema() {
+        new File("data/usuarios.xml").delete();
         this.uManager = new UsuarioManager();
     }
 
@@ -33,7 +39,7 @@ public class Facade {
     }
 
     public void encerrarSistema() {
-        return;
+        uManager.save();
     }
 
 }

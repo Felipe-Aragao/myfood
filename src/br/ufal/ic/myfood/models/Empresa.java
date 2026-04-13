@@ -9,6 +9,8 @@ public class Empresa extends Usuario{
         this.cpf = cpf;
     }
 
+    public Empresa() {};
+
     public String getCpf() {
         return cpf;
     }

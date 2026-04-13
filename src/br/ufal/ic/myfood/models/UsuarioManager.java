@@ -2,15 +2,48 @@ package br.ufal.ic.myfood.models;
 
 import br.ufal.ic.myfood.exceptions.*;
 
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioManager {
 
     private List<Usuario> usuarios;
+    private static final String ARQUIVO = "data/usuarios.xml";
 
     public UsuarioManager() {
         usuarios = new ArrayList<>();
+        load();
+    }
+
+    public void save(){
+        try {
+            new File("./data").mkdirs();
+
+            XMLEncoder encoder = new XMLEncoder(new FileOutputStream(ARQUIVO));
+            encoder.writeObject(usuarios);
+            encoder.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void load() {
+        try {
+            File file = new File(ARQUIVO);
+            if (!file.exists()) return;
+
+            XMLDecoder decoder = new XMLDecoder(new FileInputStream(file));
+            usuarios = (List<Usuario>) decoder.readObject();
+            decoder.close();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     public void criarUsuario(String nome, String email, String senha, String endereco, String cpf) throws Exception {
@@ -70,6 +103,8 @@ public class UsuarioManager {
                     if (user instanceof Empresa) {
                         return ((Empresa) user).getCpf();
                     }
+                } else if (atributo.equalsIgnoreCase("senha")) {
+                    return  user.getSenha();
                 }
             }
         }
