@@ -1,5 +1,7 @@
 package br.ufal.ic.myfood.models;
 
+import br.ufal.ic.myfood.exceptions.AtributoInvalidoException;
+
 import java.util.UUID;
 
 public class Usuario {
@@ -19,6 +21,23 @@ public class Usuario {
     }
 
     public Usuario() {}
+
+    public String getAtributo(String atributo) throws AtributoInvalidoException {
+        if (atributo.equalsIgnoreCase("nome")) {
+            return this.nome;
+        } else if (atributo.equalsIgnoreCase("email")) {
+            return this.email;
+        } else if (atributo.equalsIgnoreCase("endereco")) {
+            return this.endereco;
+        } else if (atributo.equalsIgnoreCase("cpf")) {
+            if (this instanceof Dono) {
+                return ((Dono) this).getCpf();
+            }
+        } else if (atributo.equalsIgnoreCase("senha")) {
+            return  this.senha;
+        }
+        throw new AtributoInvalidoException();
+    }
 
     // Getter e Setters
     public String getId() {return id;}

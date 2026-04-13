@@ -48,7 +48,7 @@ public class UsuarioManager {
 
     public void criarUsuario(String nome, String email, String senha, String endereco, String cpf) throws Exception {
         validarUsuario(email, nome, senha, endereco, cpf);
-        usuarios.add(new Empresa(nome, email, senha, endereco, cpf));
+        usuarios.add(new Dono(nome, email, senha, endereco, cpf));
     }
 
     public void criarUsuario(String nome, String email, String senha, String endereco) throws Exception {
@@ -90,25 +90,12 @@ public class UsuarioManager {
         validarUsuario(email, nome, senha, endereco);
     }
 
-    public String getAtributoUsuario(String id, String atributo) throws UsuarioNaoExisteException {
+    public String getAtributoUsuario(String id, String atributo) throws Exception {
         for (Usuario user : usuarios) {
             if (user.getId().equals(id)) {
-                if (atributo.equalsIgnoreCase("nome")) {
-                    return user.getNome();
-                } else if (atributo.equalsIgnoreCase("email")) {
-                    return user.getEmail();
-                } else if (atributo.equalsIgnoreCase("endereco")) {
-                    return user.getEndereco();
-                } else if (atributo.equalsIgnoreCase("cpf")) {
-                    if (user instanceof Empresa) {
-                        return ((Empresa) user).getCpf();
-                    }
-                } else if (atributo.equalsIgnoreCase("senha")) {
-                    return  user.getSenha();
-                }
+                return user.getAtributo(atributo);
             }
         }
-
         throw new UsuarioNaoExisteException();
     }
 
