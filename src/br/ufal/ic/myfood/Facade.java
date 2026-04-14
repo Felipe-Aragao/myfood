@@ -1,7 +1,7 @@
 package br.ufal.ic.myfood;
 
-import br.ufal.ic.myfood.models.EmpresaManager;
-import br.ufal.ic.myfood.models.UsuarioManager;
+import br.ufal.ic.myfood.managers.EmpresaManager;
+import br.ufal.ic.myfood.managers.UsuarioManager;
 import java.io.File;
 
 public class Facade {
@@ -69,20 +69,20 @@ public class Facade {
 
     // Produto
 
-    public String criarProduto(String idEmpresa, String nome, float valor, String categoria) {
-        return "";
+    public String criarProduto(String idEmpresa, String nome, float valor, String categoria) throws Exception {
+        return eManager.criarProduto(idEmpresa, nome, valor, categoria);
     }
 
-    public void editarProduto(String id, String nome, float valor, String categoria) {
-        return;
+    public void editarProduto(String id, String nome, float valor, String categoria) throws Exception {
+        eManager.editarProduto(id, nome, valor, categoria);
     }
 
-    public String getProduto(String nome, String idEmpresa, String atributo){
-        return "";
+    public String getProduto(String nome, String idEmpresa, String atributo) throws Exception {
+        return eManager.getProduto(nome, idEmpresa, atributo);
     }
 
-    public String listarProduto(String idEmpresa) {
-        return "";
+    public String listarProdutos(String idEmpresa) throws Exception {
+        return eManager.listarProdutos(idEmpresa);
     }
 
 

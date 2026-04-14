@@ -1,6 +1,9 @@
-package br.ufal.ic.myfood.models;
+package br.ufal.ic.myfood.managers;
 
 import br.ufal.ic.myfood.exceptions.*;
+import br.ufal.ic.myfood.models.Cliente;
+import br.ufal.ic.myfood.models.Dono;
+import br.ufal.ic.myfood.models.Usuario;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;

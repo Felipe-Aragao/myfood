@@ -1,8 +1,9 @@
 package br.ufal.ic.myfood.models;
 
 import br.ufal.ic.myfood.exceptions.AtributoInvalidoException;
-import br.ufal.ic.myfood.exceptions.EmpresaNaoExisteException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Empresa {
@@ -13,20 +14,19 @@ public class Empresa {
     private String tipoCozinha;
     private String dono;
 
+    private List<Produto> produtos = new ArrayList<>();
+
     public Empresa(String dono, String name, String endereco, String tipoCozinha) {
         this.nome = name;
         this.endereco = endereco;
         this.tipoCozinha = tipoCozinha;
         this.dono = dono;
         this.id = UUID.randomUUID().toString();
+
+        this.produtos = new ArrayList<>();
     }
 
-    public Empresa(){};
-
-    @Override
-    public String toString() {
-        return "[" + this.nome + ", " + this.endereco + "]";
-    }
+    public Empresa(){}
 
     public String getAtributo(String atributo) throws Exception {
         if (atributo.equalsIgnoreCase("nome")) {
@@ -42,6 +42,15 @@ public class Empresa {
     }
 
     // Getter e Setters
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
+    }
+
     public String getId() {
         return id;
     }
@@ -80,5 +89,11 @@ public class Empresa {
 
     public void setDono(String dono) {
         this.dono = dono;
+    }
+
+    // toString
+    @Override
+    public String toString() {
+        return "[" + this.nome + ", " + this.endereco + "]";
     }
 }
