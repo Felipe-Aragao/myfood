@@ -1,6 +1,7 @@
 package br.ufal.ic.myfood;
 
 import br.ufal.ic.myfood.managers.EmpresaManager;
+import br.ufal.ic.myfood.managers.ProdutoManager;
 import br.ufal.ic.myfood.managers.UsuarioManager;
 import java.io.File;
 
@@ -8,11 +9,13 @@ public class Facade {
 
     UsuarioManager uManager;
     EmpresaManager eManager;
+    ProdutoManager pManager;
 
     // Sistema
     public Facade() {
         this.uManager = new UsuarioManager();
         this.eManager = new EmpresaManager(uManager);
+        this.pManager = new ProdutoManager(eManager);
     }
 
     public void encerrarSistema() {
@@ -25,6 +28,7 @@ public class Facade {
         new File("data/empresas.xml").delete();
         this.uManager = new UsuarioManager();
         this.eManager = new EmpresaManager(uManager);
+        this.pManager = new ProdutoManager(eManager);
     }
 
     // Usuários
@@ -70,19 +74,19 @@ public class Facade {
     // Produto
 
     public String criarProduto(String idEmpresa, String nome, float valor, String categoria) throws Exception {
-        return eManager.criarProduto(idEmpresa, nome, valor, categoria);
+        return pManager.criarProduto(idEmpresa, nome, valor, categoria);
     }
 
     public void editarProduto(String id, String nome, float valor, String categoria) throws Exception {
-        eManager.editarProduto(id, nome, valor, categoria);
+        pManager.editarProduto(id, nome, valor, categoria);
     }
 
     public String getProduto(String nome, String idEmpresa, String atributo) throws Exception {
-        return eManager.getProduto(nome, idEmpresa, atributo);
+        return pManager.getProduto(nome, idEmpresa, atributo);
     }
 
     public String listarProdutos(String idEmpresa) throws Exception {
-        return eManager.listarProdutos(idEmpresa);
+        return pManager.listarProdutos(idEmpresa);
     }
 
 
