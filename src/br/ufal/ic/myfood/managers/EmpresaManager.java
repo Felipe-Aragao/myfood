@@ -110,7 +110,7 @@ public class EmpresaManager {
                 .collect(Collectors.toCollection(ArrayList::new));
 
         if (filtro.isEmpty()){
-            throw new EmpresaNaoExisteException(0);
+            throw new EmpresaComEsseNomeNaoExisteException();
         }
 
         if (indice >= filtro.size()) {

@@ -106,6 +106,10 @@ public class UsuarioManager {
 
         Usuario user = getUsuario(id);
 
+        if (atributo == null || atributo.isEmpty()) {
+            throw new AtributoInvalidoException();
+        }
+
         if (atributo.equalsIgnoreCase("nome")) {
             return user.getNome();
         } else if (atributo.equalsIgnoreCase("email")) {

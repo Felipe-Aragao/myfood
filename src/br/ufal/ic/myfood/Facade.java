@@ -1,34 +1,42 @@
 package br.ufal.ic.myfood;
 
 import br.ufal.ic.myfood.managers.EmpresaManager;
+import br.ufal.ic.myfood.managers.PedidoManager;
 import br.ufal.ic.myfood.managers.ProdutoManager;
 import br.ufal.ic.myfood.managers.UsuarioManager;
+import br.ufal.ic.myfood.models.Pedido;
+
 import java.io.File;
 
 public class Facade {
 
     UsuarioManager uManager;
     EmpresaManager eManager;
-    ProdutoManager pManager;
+    ProdutoManager proManager;
+    PedidoManager pedManager;
 
     // Sistema
     public Facade() {
         this.uManager = new UsuarioManager();
         this.eManager = new EmpresaManager(uManager);
-        this.pManager = new ProdutoManager(eManager);
+        this.proManager = new ProdutoManager(eManager);
+        this.pedManager = new PedidoManager(uManager, eManager, proManager);
     }
 
     public void encerrarSistema() {
         uManager.save();
         eManager.save();
+        pedManager.save();
     }
 
     public void zerarSistema() {
         new File("data/usuarios.xml").delete();
         new File("data/empresas.xml").delete();
+        new File("data/pedidos.xml").delete();
         this.uManager = new UsuarioManager();
         this.eManager = new EmpresaManager(uManager);
-        this.pManager = new ProdutoManager(eManager);
+        this.proManager = new ProdutoManager(eManager);
+        this.pedManager = new PedidoManager(uManager, eManager, proManager);
     }
 
     // Usuários
@@ -74,20 +82,44 @@ public class Facade {
     // Produto
 
     public String criarProduto(String idEmpresa, String nome, float valor, String categoria) throws Exception {
-        return pManager.criarProduto(idEmpresa, nome, valor, categoria);
+        return proManager.criarProduto(idEmpresa, nome, valor, categoria);
     }
 
     public void editarProduto(String id, String nome, float valor, String categoria) throws Exception {
-        pManager.editarProduto(id, nome, valor, categoria);
+        proManager.editarProduto(id, nome, valor, categoria);
     }
 
     public String getProduto(String nome, String idEmpresa, String atributo) throws Exception {
-        return pManager.getProduto(nome, idEmpresa, atributo);
+        return proManager.getProduto(nome, idEmpresa, atributo);
     }
 
     public String listarProdutos(String idEmpresa) throws Exception {
-        return pManager.listarProdutos(idEmpresa);
+        return proManager.listarProdutos(idEmpresa);
     }
 
+    // Pedido
 
+    public String criarPedido(String idCliente, String idEmpresa) throws Exception {
+        return pedManager.criarPedido(idCliente, idEmpresa);
+    }
+
+    public void adicionarProduto(String idPedido, String idProduto) throws Exception {
+        pedManager.adicionarProduto(idPedido, idProduto);
+    }
+
+    public String getPedidos(String idPedido, String atributo) throws Exception {
+        return pedManager.getPedidos(idPedido, atributo);
+    }
+
+    public void fecharPedido(String idPedido) throws Exception {
+        pedManager.fecharPedido(idPedido);
+    }
+
+    public void removerProduto(String idPedido, String produto) throws Exception {
+        pedManager.removerProduto(idPedido, produto);
+    }
+
+    public String getNumeroPedido(String idCliente, String idEmpresa, int indice) throws Exception {
+        return pedManager.getNumeroPedido(idCliente, idEmpresa, indice);
+    }
 }

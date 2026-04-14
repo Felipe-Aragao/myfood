@@ -1,7 +1,9 @@
 package br.ufal.ic.myfood.managers;
 
 import br.ufal.ic.myfood.exceptions.*;
+import br.ufal.ic.myfood.models.Dono;
 import br.ufal.ic.myfood.models.Empresa;
+import br.ufal.ic.myfood.models.Pedido;
 import br.ufal.ic.myfood.models.Produto;
 
 import java.util.Locale;
@@ -64,6 +66,10 @@ public class ProdutoManager {
     public String getProduto(String nome, String idEmpresa, String atributo) throws Exception {
         Empresa empresa = eManager.findEmpresa(idEmpresa);
 
+        if (atributo == null || atributo.isEmpty()) {
+            throw new AtributoInvalidoException();
+        }
+
         if (atributo.equalsIgnoreCase("empresa")) {
             return empresa.getNome();
         }
@@ -76,7 +82,7 @@ public class ProdutoManager {
                 } else if (atributo.equalsIgnoreCase("categoria")) {
                     return p.getCategoria();
                 }
-                throw new AtributoInvalidoException(0);
+                throw new AtributoNaoExisteException();
             }
         }
         throw new ProdutoNaoEncontradoException();
@@ -93,5 +99,7 @@ public class ProdutoManager {
         }
         throw new EmpresaNaoEncontradaException();
     }
+
+
 }
 
