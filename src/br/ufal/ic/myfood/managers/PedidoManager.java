@@ -2,23 +2,18 @@ package br.ufal.ic.myfood.managers;
 
 import br.ufal.ic.myfood.exceptions.*;
 import br.ufal.ic.myfood.models.*;
+import br.ufal.ic.myfood.utils.Persistencia;
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class PedidoManager {
 
     private UsuarioManager uManager;
     private EmpresaManager eManager;
-    private ProdutoManager proManager;
     private static final String ARQUIVO_PEDIDO = "data/pedidos.xml";
 
 
@@ -27,7 +22,6 @@ public class PedidoManager {
     public PedidoManager(UsuarioManager uManager, EmpresaManager eManager, ProdutoManager proManager) {
         this.uManager = uManager;
         this.eManager = eManager;
-        this.proManager = proManager;
 
         this.pedidos = new ArrayList<>();
         load();
@@ -36,28 +30,11 @@ public class PedidoManager {
 
     // Persistência de dados
     public void save(){
-        try {
-            new File("./data").mkdirs();
-
-            XMLEncoder encoder = new XMLEncoder(new FileOutputStream(ARQUIVO_PEDIDO));
-            encoder.writeObject(pedidos);
-            encoder.close();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+        Persistencia.save(ARQUIVO_PEDIDO, pedidos);
     }
 
     public void load() {
-        try {
-            File file = new File(ARQUIVO_PEDIDO);
-            if (!file.exists()) return;
-
-            XMLDecoder decoder = new XMLDecoder(new FileInputStream(file));
-            pedidos = (List<Pedido>) decoder.readObject();
-            decoder.close();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+        pedidos = Persistencia.load(ARQUIVO_PEDIDO);
     }
 
     public String criarPedido(String idCliente, String idEmpresa) throws Exception {
@@ -70,11 +47,11 @@ public class PedidoManager {
     }
 
     public void adicionarProduto(String idPedido, String idProduto) throws Exception {
-        Pedido pedido = findPedido(idPedido);
+        Pedido pedido = findPedido(idPedido).orElseThrow(PedidoNaoExisteException::new);
 
         validarPedido(pedido);
 
-        Empresa empresa = eManager.findEmpresa(pedido.getEmpresa());
+        Empresa empresa = eManager.findEmpresa(pedido.getEmpresa()).orElseThrow(EmpresaNaoExisteException::new);
 
         for (Produto p : empresa.getProdutos()) {
             if (p.getId().equals(idProduto)) {
@@ -86,14 +63,8 @@ public class PedidoManager {
         throw new ProdutoNaoPertenceAEmpresaException();
     }
 
-    public Pedido findPedido(String id) throws Exception {
-        for (Pedido p : pedidos) {
-            if (p.getNumero().equals(id)){
-                return p;
-            }
-        }
-
-        throw new PedidoNaoExisteException();
+    public Optional<Pedido> findPedido(String id) throws Exception {
+        return pedidos.stream().filter(e -> e.getNumero().equals(id)).findFirst();
     }
 
     public void validarPedido(Pedido p) throws Exception {
@@ -122,7 +93,7 @@ public class PedidoManager {
 
     public String getPedidos(String idPedido, String atributo) throws Exception {
 
-        Pedido pedido = findPedido(idPedido);
+        Pedido pedido = findPedido(idPedido).orElseThrow(PedidoNaoExisteException::new);
 
         if (atributo == null || atributo.isEmpty()) {
             throw new AtributoInvalidoException();
@@ -131,7 +102,7 @@ public class PedidoManager {
         if (atributo.equalsIgnoreCase("cliente")) {
             return uManager.getUsuario(pedido.getCliente()).getNome();
         } else if (atributo.equalsIgnoreCase("empresa")) {
-            return eManager.findEmpresa(pedido.getEmpresa()).getNome();
+            return eManager.findEmpresa(pedido.getEmpresa()).orElseThrow(EmpresaNaoExisteException::new).getNome();
         } else if (atributo.equalsIgnoreCase("estado")) {
             return pedido.getEstado();
         } else if (atributo.equalsIgnoreCase("valor")) {
@@ -152,21 +123,18 @@ public class PedidoManager {
             throw new ProdutoInvalidoException();
         }
 
-        Pedido pedido = findPedido(idPedido);
+        Pedido pedido = findPedido(idPedido).orElseThrow(PedidoNaoExisteException::new);
 
         if (!(pedido.getEstado().equals("aberto"))) {
             throw new RemoverDePedidoFechadoException();
         }
 
-        for (Produto p : pedido.getProdutos()) {
-            if (p.getNome().equals(produto)) {
-                pedido.setValor(pedido.getValor() - p.getValor());
-                pedido.getProdutos().remove(p);
-                return;
-            }
-        }
+        Produto pRemover = pedido.getProdutos().stream().filter(p -> p.getNome().equals(produto)).findFirst()
+                .orElseThrow(ProdutoNaoEncontradoException::new);
 
-        throw new ProdutoNaoEncontradoException();
+        pedido.setValor(pedido.getValor() - pRemover.getValor());
+        pedido.getProdutos().remove(pRemover);
+
     }
 
     public String getNumeroPedido(String idCliente, String idEmpresa, int indice) throws Exception {
@@ -187,13 +155,9 @@ public class PedidoManager {
     }
 
     public void fecharPedido(String idPedido) throws Exception {
-        for (Pedido p : pedidos) {
-            if (p.getNumero().equals(idPedido)){
-                p.setEstado("preparando");
-                return;
-            }
-        }
 
-        throw new PedidoNaoEncontradoException();
+        Pedido pedido = findPedido(idPedido).orElseThrow(PedidoNaoEncontradoException::new);
+
+        pedido.setEstado("preparando");
     }
 }

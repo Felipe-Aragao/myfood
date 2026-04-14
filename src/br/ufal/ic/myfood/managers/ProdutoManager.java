@@ -1,9 +1,8 @@
 package br.ufal.ic.myfood.managers;
 
 import br.ufal.ic.myfood.exceptions.*;
-import br.ufal.ic.myfood.models.Dono;
 import br.ufal.ic.myfood.models.Empresa;
-import br.ufal.ic.myfood.models.Pedido;
+
 import br.ufal.ic.myfood.models.Produto;
 
 import java.util.Locale;
@@ -34,7 +33,7 @@ public class ProdutoManager {
 
         validarProduto(nome, valor, categoria);
 
-        Empresa empresa = eManager.findEmpresa(idEmpresa);
+        Empresa empresa = eManager.findEmpresa(idEmpresa).orElseThrow(EmpresaNaoExisteException::new);
         for (Produto p : empresa.getProdutos()) {
             if (p.getNome().equals(nome))
                 throw new ProdutoJaExisteException();
@@ -64,7 +63,7 @@ public class ProdutoManager {
     }
 
     public String getProduto(String nome, String idEmpresa, String atributo) throws Exception {
-        Empresa empresa = eManager.findEmpresa(idEmpresa);
+        Empresa empresa = eManager.findEmpresa(idEmpresa).orElseThrow(EmpresaNaoExisteException::new);
 
         if (atributo == null || atributo.isEmpty()) {
             throw new AtributoInvalidoException();
@@ -89,6 +88,7 @@ public class ProdutoManager {
     }
 
     public String listarProdutos(String idEmpresa) throws Exception {
+
         for (Empresa empresa : eManager.getEmpresas()) {
             if (empresa.getId().equals(idEmpresa)) {
                 String lista = empresa.getProdutos().stream()

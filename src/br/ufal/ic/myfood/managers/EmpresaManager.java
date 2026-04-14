@@ -3,18 +3,11 @@ package br.ufal.ic.myfood.managers;
 import br.ufal.ic.myfood.exceptions.*;
 import br.ufal.ic.myfood.models.Dono;
 import br.ufal.ic.myfood.models.Empresa;
-import br.ufal.ic.myfood.models.Produto;
+import br.ufal.ic.myfood.utils.Persistencia;
 
-import java.beans.PropertyDescriptor;
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class EmpresaManager {
@@ -32,28 +25,11 @@ public class EmpresaManager {
 
     // Persistência de dados
     public void save(){
-        try {
-            new File("./data").mkdirs();
-
-            XMLEncoder encoder = new XMLEncoder(new FileOutputStream(ARQUIVO_EMPRESA));
-            encoder.writeObject(empresas);
-            encoder.close();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+        Persistencia.save(ARQUIVO_EMPRESA, empresas);
     }
 
     public void load() {
-        try {
-            File file = new File(ARQUIVO_EMPRESA);
-            if (!file.exists()) return;
-
-            XMLDecoder decoder = new XMLDecoder(new FileInputStream(file));
-            empresas = (List<Empresa>) decoder.readObject();
-            decoder.close();
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
+        empresas = Persistencia.load(ARQUIVO_EMPRESA);
     }
 
     // Empresa
@@ -71,7 +47,7 @@ public class EmpresaManager {
             throw new AtributoInvalidoException();
         }
 
-        Empresa empresa = findEmpresa(id);
+        Empresa empresa = findEmpresa(id).orElseThrow(EmpresaNaoExisteException::new);
 
         if (atributo.equalsIgnoreCase("dono")) {
             return uManager.getUsuario(empresa.getDono()).getNome();
@@ -120,13 +96,8 @@ public class EmpresaManager {
         return filtro.get(indice).getId();
     }
 
-    public Empresa findEmpresa(String id) throws Exception {
-        for (Empresa empresa : empresas) {
-            if (empresa.getId().equals(id)) {
-                return empresa;
-            }
-        }
-        throw new EmpresaNaoExisteException();
+    public Optional<Empresa> findEmpresa(String id) throws Exception {
+        return empresas.stream().filter(e -> e.getId().equals(id)).findFirst();
     }
 
     // Validação

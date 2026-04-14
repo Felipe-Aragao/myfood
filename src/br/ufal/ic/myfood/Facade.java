@@ -4,7 +4,6 @@ import br.ufal.ic.myfood.managers.EmpresaManager;
 import br.ufal.ic.myfood.managers.PedidoManager;
 import br.ufal.ic.myfood.managers.ProdutoManager;
 import br.ufal.ic.myfood.managers.UsuarioManager;
-import br.ufal.ic.myfood.models.Pedido;
 
 import java.io.File;
 
