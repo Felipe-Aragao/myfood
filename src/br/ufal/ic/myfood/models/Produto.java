@@ -21,17 +21,6 @@ public class Produto {
 
     public Produto(){}
 
-    public String getAtributo(String atributo) throws Exception {
-        if (atributo.equalsIgnoreCase("nome")) {
-            return this.nome;
-        } else if (atributo.equalsIgnoreCase("valor")) {
-            return String.format(Locale.US, "%.2f", this.getValor());
-        } else if (atributo.equalsIgnoreCase("categoria")) {
-            return this.categoria;
-        }
-        throw new AtributoInvalidoException(0);
-    }
-
     //getter e setters
     public String getId() {
         return id;

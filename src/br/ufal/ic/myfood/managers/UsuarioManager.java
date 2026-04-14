@@ -59,13 +59,13 @@ public class UsuarioManager {
         usuarios.add(new Cliente(nome, email, senha, endereco));
     }
 
-    public Usuario getUsuario(String id) {
+    public Usuario getUsuario(String id) throws UsuarioNaoExisteException {
         for (Usuario user : usuarios) {
             if (user.getId().equals(id)) {
                 return user;
             }
         }
-        return null;
+        throw new UsuarioNaoExisteException();
     }
 
     private void validarUsuario(String email, String nome, String senha, String endereco) throws Exception {
@@ -103,12 +103,23 @@ public class UsuarioManager {
     }
 
     public String getAtributoUsuario(String id, String atributo) throws Exception {
-        for (Usuario user : usuarios) {
-            if (user.getId().equals(id)) {
-                return user.getAtributo(atributo);
+
+        Usuario user = getUsuario(id);
+
+        if (atributo.equalsIgnoreCase("nome")) {
+            return user.getNome();
+        } else if (atributo.equalsIgnoreCase("email")) {
+            return user.getEmail();
+        } else if (atributo.equalsIgnoreCase("endereco")) {
+            return user.getEndereco();
+        } else if (atributo.equalsIgnoreCase("cpf")) {
+            if (user instanceof Dono) {
+                return ((Dono) user).getCpf();
             }
+        } else if (atributo.equalsIgnoreCase("senha")) {
+            return  user.getSenha();
         }
-        throw new UsuarioNaoExisteException();
+        throw new AtributoInvalidoException();
     }
 
     public String login(String email, String senha) throws LoginInvalidoException {
@@ -122,4 +133,5 @@ public class UsuarioManager {
 
         throw new LoginInvalidoException();
     }
+
 }

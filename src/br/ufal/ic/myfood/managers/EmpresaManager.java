@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class EmpresaManager {
@@ -73,10 +74,15 @@ public class EmpresaManager {
         Empresa empresa = findEmpresa(id);
 
         if (atributo.equalsIgnoreCase("dono")) {
-            return uManager.getUsuario(empresa.getAtributo("dono")).getNome();
+            return uManager.getUsuario(empresa.getDono()).getNome();
+        } else if (atributo.equalsIgnoreCase("nome")) {
+            return empresa.getNome();
+        } else if (atributo.equalsIgnoreCase("endereco")) {
+            return empresa.getEndereco();
+        } else if (atributo.equalsIgnoreCase("tipocozinha")) {
+            return  empresa.getTipoCozinha();
         }
-        return empresa.getAtributo(atributo);
-
+        throw new AtributoInvalidoException();
     }
 
     public String getEmpresasDoUsuario(String dono) throws Exception {
@@ -197,10 +203,16 @@ public class EmpresaManager {
         if (atributo.equalsIgnoreCase("empresa")) {
             return empresa.getNome();
         }
-
         for (Produto p : empresa.getProdutos()) {
             if (p.getNome().equals(nome)) {
-                return p.getAtributo(atributo);
+                if (atributo.equalsIgnoreCase("nome")) {
+                    return p.getNome();
+                } else if (atributo.equalsIgnoreCase("valor")) {
+                    return String.format(Locale.US, "%.2f", p.getValor());
+                } else if (atributo.equalsIgnoreCase("categoria")) {
+                    return p.getCategoria();
+                }
+                throw new AtributoInvalidoException(0);
             }
         }
         throw new ProdutoNaoEncontradoException();

@@ -28,19 +28,6 @@ public class Empresa {
 
     public Empresa(){}
 
-    public String getAtributo(String atributo) throws Exception {
-        if (atributo.equalsIgnoreCase("nome")) {
-            return this.nome;
-        } else if (atributo.equalsIgnoreCase("dono")) {
-            return this.dono;
-        } else if (atributo.equalsIgnoreCase("endereco")) {
-            return this.endereco;
-        } else if (atributo.equalsIgnoreCase("tipocozinha")) {
-            return  this.tipoCozinha;
-        }
-        throw new AtributoInvalidoException();
-    }
-
     // Getter e Setters
 
     public List<Produto> getProdutos() {
