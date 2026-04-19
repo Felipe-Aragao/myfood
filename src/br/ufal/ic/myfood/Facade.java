@@ -19,7 +19,7 @@ public class Facade {
         this.uManager = new UsuarioManager();
         this.eManager = new EmpresaManager(uManager);
         this.proManager = new ProdutoManager(eManager);
-        this.pedManager = new PedidoManager(uManager, eManager, proManager);
+        this.pedManager = new PedidoManager(uManager, eManager);
     }
 
     public void encerrarSistema() {
@@ -35,7 +35,7 @@ public class Facade {
         this.uManager = new UsuarioManager();
         this.eManager = new EmpresaManager(uManager);
         this.proManager = new ProdutoManager(eManager);
-        this.pedManager = new PedidoManager(uManager, eManager, proManager);
+        this.pedManager = new PedidoManager(uManager, eManager);
     }
 
     // Usuários

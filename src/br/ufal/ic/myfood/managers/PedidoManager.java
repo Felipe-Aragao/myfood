@@ -19,7 +19,7 @@ public class PedidoManager {
 
     private List<Pedido>  pedidos;
 
-    public PedidoManager(UsuarioManager uManager, EmpresaManager eManager, ProdutoManager proManager) {
+    public PedidoManager(UsuarioManager uManager, EmpresaManager eManager) {
         this.uManager = uManager;
         this.eManager = eManager;
 
