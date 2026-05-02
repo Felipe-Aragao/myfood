@@ -1,10 +1,7 @@
 package br.ufal.ic.myfood.managers;
 
 import br.ufal.ic.myfood.exceptions.*;
-import br.ufal.ic.myfood.models.Dono;
-import br.ufal.ic.myfood.models.Empresa;
-import br.ufal.ic.myfood.models.Mercado;
-import br.ufal.ic.myfood.models.Restaurante;
+import br.ufal.ic.myfood.models.*;
 import br.ufal.ic.myfood.utils.Persistencia;
 
 import java.util.ArrayList;
@@ -58,6 +55,15 @@ public class EmpresaManager {
         return novo.getId();
     }
 
+    public String criarEmpresa(String tipo, String dono, String nome, String endereco,
+                               boolean horas24, int funcionarios) throws Exception {
+
+        validarEmpresa(tipo, dono, nome, endereco);
+        Empresa novo = new Farmacia(tipo, dono, nome, endereco, horas24, funcionarios);
+        empresas.add(novo);
+        return novo.getId();
+    }
+
     public void alterarFuncionamento(String mercadoId, String abre, String fecha) throws Exception {
 
         Empresa mercado = findEmpresa(mercadoId).orElseThrow(EmpresaNaoExisteException::new);
@@ -102,7 +108,21 @@ public class EmpresaManager {
             if (empresa.getTipo().equals("mercado")) {
                 return ((Mercado) empresa).getTipoMercado();
             }
+        } else if (atributo.equalsIgnoreCase("aberto24horas")) {
+            if (empresa.getTipo().equals("farmacia")) {
+                boolean isAberto24 = ((Farmacia) empresa).isAberto24horas();
+                if (isAberto24) {
+                    return "true";
+                } else {
+                    return "false";
+                }
+            }
+        } else if (atributo.equalsIgnoreCase("numerofuncionarios")) {
+            if (empresa.getTipo().equals("farmacia")) {
+                return "" + ((Farmacia) empresa).getNumeroFuncionarios();
+            }
         }
+
         throw new AtributoInvalidoException();
     }
 

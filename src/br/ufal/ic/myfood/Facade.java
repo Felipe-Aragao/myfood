@@ -73,6 +73,11 @@ public class Facade {
         return eManager.criarEmpresa(tipo, dono, nome, endereco, abre, fecha, tipoMercado);
     }
 
+    public String criarEmpresa(String tipo, String dono, String nome, String endereco,
+                               boolean horas24, int funcionarios) throws Exception {
+        return eManager.criarEmpresa(tipo, dono, nome, endereco, horas24, funcionarios);
+    }
+
     public void alterarFuncionamento(String idMercado, String abre, String fecha) throws Exception{
         eManager.alterarFuncionamento(idMercado, abre, fecha);
     }
