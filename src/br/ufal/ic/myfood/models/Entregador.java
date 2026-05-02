@@ -1,0 +1,31 @@
+package br.ufal.ic.myfood.models;
+
+public class Entregador extends Usuario{
+
+    String veiculo;
+    String placa;
+
+    public Entregador(String nome, String email, String senha, String endereco, String veiculo, String placa) {
+        super(nome, email, senha, endereco);
+        this.veiculo = veiculo;
+        this.placa = placa;
+    }
+
+    public Entregador() {}
+
+    public String getVeiculo() {
+        return veiculo;
+    }
+
+    public void setVeiculo(String veiculo) {
+        this.veiculo = veiculo;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+}

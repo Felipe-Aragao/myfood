@@ -15,6 +15,8 @@ public class Empresa {
     private String dono;
 
     private List<Produto> produtos = new ArrayList<>();
+    private List<Entregador> entregadores = new ArrayList<>();
+
 
     public Empresa(String tipo, String dono, String name, String endereco) {
         this.nome = name;
@@ -24,6 +26,7 @@ public class Empresa {
         this.id = UUID.randomUUID().toString();
 
         this.produtos = new ArrayList<>();
+        this.entregadores = new ArrayList<>();
     }
 
     public Empresa(){}
@@ -76,6 +79,14 @@ public class Empresa {
 
     public void setDono(String dono) {
         this.dono = dono;
+    }
+
+    public List<Entregador> getEntregadores() {
+        return entregadores;
+    }
+
+    public void setEntregadores(List<Entregador> entregadores) {
+        this.entregadores = entregadores;
     }
 
     // toString

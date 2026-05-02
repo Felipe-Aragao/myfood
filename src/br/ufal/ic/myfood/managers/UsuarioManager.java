@@ -3,11 +3,13 @@ package br.ufal.ic.myfood.managers;
 import br.ufal.ic.myfood.exceptions.*;
 import br.ufal.ic.myfood.models.Cliente;
 import br.ufal.ic.myfood.models.Dono;
+import br.ufal.ic.myfood.models.Entregador;
 import br.ufal.ic.myfood.models.Usuario;
 import br.ufal.ic.myfood.utils.Persistencia;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UsuarioManager {
 
@@ -35,6 +37,12 @@ public class UsuarioManager {
     public void criarUsuario(String nome, String email, String senha, String endereco) throws Exception {
         validarUsuario(email, nome, senha, endereco);
         usuarios.add(new Cliente(nome, email, senha, endereco));
+    }
+
+    public void criarUsuario(String nome, String email, String senha, String endereco, String veiculo, String placa) throws Exception {
+        validarVeiculo(veiculo, placa);
+        validarUsuario(email, nome, senha, endereco);
+        usuarios.add(new Entregador(nome, email, senha, endereco, veiculo, placa));
     }
 
     public Usuario getUsuario(String id) throws UsuarioNaoExisteException {
@@ -75,6 +83,24 @@ public class UsuarioManager {
         validarUsuario(email, nome, senha, endereco);
     }
 
+    public void validarVeiculo(String veiculo, String placa) throws Exception {
+        if (veiculo == null || veiculo.isEmpty()) {
+            throw new VeiculoInvalidoException();
+        }
+
+        if (placa == null || placa.isEmpty()) {
+            throw new PlacaInvalidaException();
+        }
+
+        for (Usuario u : usuarios) {
+            if (u instanceof Entregador) {
+                if (((Entregador) u).getPlaca().equals(placa)) {
+                    throw new PlacaInvalidaException();
+                }
+            }
+        }
+    }
+
     public String getAtributoUsuario(String id, String atributo) throws Exception {
 
         Usuario user = getUsuario(id);
@@ -95,6 +121,14 @@ public class UsuarioManager {
             }
         } else if (atributo.equalsIgnoreCase("senha")) {
             return  user.getSenha();
+        } else if (atributo.equalsIgnoreCase("veiculo")) {
+            if (user instanceof Entregador) {
+                return ((Entregador) user).getVeiculo();
+            }
+        } else if (atributo.equalsIgnoreCase("placa")) {
+            if (user instanceof Entregador) {
+                return ((Entregador) user).getPlaca();
+            }
         }
         throw new AtributoInvalidoException();
     }
@@ -105,5 +139,4 @@ public class UsuarioManager {
                 .findFirst()
                 .orElseThrow(LoginInvalidoException::new);
     }
-
 }

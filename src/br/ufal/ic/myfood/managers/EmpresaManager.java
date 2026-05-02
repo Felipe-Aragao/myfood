@@ -4,9 +4,11 @@ import br.ufal.ic.myfood.exceptions.*;
 import br.ufal.ic.myfood.models.*;
 import br.ufal.ic.myfood.utils.Persistencia;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EmpresaManager {
@@ -163,6 +165,49 @@ public class EmpresaManager {
 
     public Optional<Empresa> findEmpresa(String id) throws Exception {
         return empresas.stream().filter(e -> e.getId().equals(id)).findFirst();
+    }
+
+    public void cadastrarEntregador(String empresaId, String entregadorId) throws Exception {
+        Empresa empresa = findEmpresa(empresaId).orElseThrow(EmpresaNaoExisteException::new);
+        Usuario entregador = uManager.getUsuario(entregadorId);
+
+        if (!(entregador instanceof Entregador)) {
+            throw new UsuarioNaoEntregadorException();
+        }
+
+        for (Entregador e : empresa.getEntregadores()) {
+            if (e.getId().equals(entregador.getId())) {
+                throw new EntregadorDuplicadoException();
+            }
+        }
+        empresa.getEntregadores().add((Entregador) entregador);
+    }
+
+    public String getEntregadores(String empresaId) throws Exception {
+        Empresa empresa = findEmpresa(empresaId).orElseThrow(EmpresaNaoExisteException::new);
+
+        return "{" + empresa.getEntregadores().stream()
+                .map(Entregador::getEmail)
+                .collect(Collectors.toCollection(ArrayList::new)) + "}";
+
+    }
+
+    public String getEmpresas(String entregadorId) throws Exception {
+        Usuario entregador = uManager.getUsuario(entregadorId);
+
+        if (!(entregador instanceof Entregador)) {
+            throw new UsuarioNaoEntregadorException();
+        }
+
+        List<String> list = empresas.stream()
+                .filter(e -> e.getEntregadores().stream()
+                        .anyMatch(u -> u.getId().equals(entregadorId)))
+                .map(Empresa::toString)
+                .collect(Collectors.toList());
+
+        return "{" + list + "}";
+
+
     }
 
     // Validação

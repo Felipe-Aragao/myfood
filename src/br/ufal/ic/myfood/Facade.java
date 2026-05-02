@@ -7,6 +7,8 @@ import br.ufal.ic.myfood.managers.ProdutoManager;
 import br.ufal.ic.myfood.managers.UsuarioManager;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Set;
 
 public class Facade {
 
@@ -51,6 +53,11 @@ public class Facade {
         uManager.criarUsuario(nome, email, senha, endereco, cpf);
     }
 
+    public void criarUsuario(String nome, String email, String senha, String endereco, String veiculo, String placa)
+            throws Exception {
+        uManager.criarUsuario(nome, email, senha, endereco, veiculo, placa);
+    }
+
     public String getAtributoUsuario(String id, String atributo)
             throws Exception {
         return uManager.getAtributoUsuario(id, atributo);
@@ -61,6 +68,18 @@ public class Facade {
     }
 
     // Empresa
+
+    public void cadastrarEntregador(String idEmpresa, String idEntregador) throws Exception {
+        eManager.cadastrarEntregador(idEmpresa, idEntregador);
+    }
+
+    public String getEntregadores(String idEmpresa) throws Exception {
+        return eManager.getEntregadores(idEmpresa);
+    }
+
+    public String getEmpresas(String entregadorId) throws Exception {
+        return eManager.getEmpresas(entregadorId);
+    }
 
     public String criarEmpresa(String tipo, String dono, String nome, String endereco, String tipoCozinha)
             throws Exception {
