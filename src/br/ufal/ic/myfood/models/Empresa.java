@@ -8,18 +8,18 @@ import java.util.UUID;
 
 public class Empresa {
 
+    private String tipo;
     private String id;
     private String nome;
     private String endereco;
-    private String tipoCozinha;
     private String dono;
 
     private List<Produto> produtos = new ArrayList<>();
 
-    public Empresa(String dono, String name, String endereco, String tipoCozinha) {
+    public Empresa(String tipo, String dono, String name, String endereco) {
         this.nome = name;
         this.endereco = endereco;
-        this.tipoCozinha = tipoCozinha;
+        this.tipo = tipo;
         this.dono = dono;
         this.id = UUID.randomUUID().toString();
 
@@ -29,6 +29,14 @@ public class Empresa {
     public Empresa(){}
 
     // Getter e Setters
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 
     public List<Produto> getProdutos() {
         return produtos;
@@ -60,14 +68,6 @@ public class Empresa {
 
     public void setEndereco(String endereco) {
         this.endereco = endereco;
-    }
-
-    public String getTipoCozinha() {
-        return tipoCozinha;
-    }
-
-    public void setTipoCozinha(String tipoCozinha) {
-        this.tipoCozinha = tipoCozinha;
     }
 
     public String getDono() {

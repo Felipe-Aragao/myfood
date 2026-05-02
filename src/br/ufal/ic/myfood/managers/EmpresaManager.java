@@ -3,6 +3,8 @@ package br.ufal.ic.myfood.managers;
 import br.ufal.ic.myfood.exceptions.*;
 import br.ufal.ic.myfood.models.Dono;
 import br.ufal.ic.myfood.models.Empresa;
+import br.ufal.ic.myfood.models.Mercado;
+import br.ufal.ic.myfood.models.Restaurante;
 import br.ufal.ic.myfood.utils.Persistencia;
 
 import java.util.ArrayList;
@@ -33,12 +35,41 @@ public class EmpresaManager {
     }
 
     // Empresa
+
+    //  Restaurante
     public String criarEmpresa(String tipo, String dono, String nome, String endereco, String tipoCozinha) throws Exception {
 
-        validarEmpresa(dono, nome, endereco);
-        Empresa novo = new Empresa(dono, nome, endereco, tipoCozinha);
+        validarEmpresa(tipo, dono, nome, endereco);
+        Empresa novo = new Restaurante(tipo, dono, nome, endereco, tipoCozinha);
         empresas.add(novo);
         return novo.getId();
+    }
+
+
+    //  Mercado
+    public String criarEmpresa(String tipo, String dono, String nome, String endereco,
+                               String abre, String fecha, String tipoMercado) throws Exception {
+
+        validarHorario(abre, fecha);
+        validarMercado(tipoMercado);
+        validarEmpresa(tipo, dono, nome, endereco);
+        Empresa novo = new Mercado(tipo, dono, nome, endereco, abre, fecha, tipoMercado);
+        empresas.add(novo);
+        return novo.getId();
+    }
+
+    public void alterarFuncionamento(String mercadoId, String abre, String fecha) throws Exception {
+
+        Empresa mercado = findEmpresa(mercadoId).orElseThrow(EmpresaNaoExisteException::new);
+
+        if (!mercado.getTipo().equals("mercado")) {
+            throw new MercadoInvalidoException();
+        }
+
+        validarHorario(abre, fecha);
+
+        ((Mercado)mercado).setAbre(abre);
+        ((Mercado)mercado).setFecha(fecha);
     }
 
     public String getAtributoEmpresa(String id, String atributo) throws Exception {
@@ -56,7 +87,21 @@ public class EmpresaManager {
         } else if (atributo.equalsIgnoreCase("endereco")) {
             return empresa.getEndereco();
         } else if (atributo.equalsIgnoreCase("tipocozinha")) {
-            return  empresa.getTipoCozinha();
+            if (empresa.getTipo().equals("restaurante")) {
+                return ((Restaurante) empresa).getTipoCozinha();
+            }
+        } else if (atributo.equalsIgnoreCase("abre")) {
+            if (empresa.getTipo().equals("mercado")) {
+                return ((Mercado) empresa).getAbre();
+            }
+        } else if (atributo.equalsIgnoreCase("fecha")) {
+            if (empresa.getTipo().equals("mercado")) {
+                return ((Mercado) empresa).getFecha();
+            }
+        } else if (atributo.equalsIgnoreCase("tipomercado")) {
+            if (empresa.getTipo().equals("mercado")) {
+                return ((Mercado) empresa).getTipoMercado();
+            }
         }
         throw new AtributoInvalidoException();
     }
@@ -101,9 +146,22 @@ public class EmpresaManager {
     }
 
     // Validação
-    public void validarEmpresa(String dono, String nome, String endereco) throws Exception {
+    public void validarEmpresa(String tipo, String dono, String nome, String endereco) throws Exception {
 
         validarDono(dono);
+
+        if (tipo == null || tipo.isEmpty()) {
+            throw new TipoInvalidoException();
+        }
+
+        if (nome == null || nome.isEmpty()) {
+            throw new NomeInvalidoException();
+        }
+
+        if (endereco == null || endereco.isEmpty()) {
+            throw new EnderecoEmpresaInvalidoException();
+        }
+
 
         for (Empresa empresa : empresas) {
             if (empresa.getNome().equals(nome)) {
@@ -113,6 +171,43 @@ public class EmpresaManager {
                     throw new EnderecoJaUtilizadoException();
                 }
             }
+        }
+    }
+
+    public void validarMercado(String tipoMercado) throws Exception{
+        if (tipoMercado == null || tipoMercado.isEmpty()) {
+            throw new TipoMercadoInvalidoException();
+        }
+    }
+
+    public void validarHorario(String abre, String fecha) throws Exception {
+
+        String horaRegex = "^\\d{2}:\\d{2}$";
+
+        if (abre == null || fecha == null ) {
+            throw new HorarioInvalidoException();
+        }
+        if (abre.isEmpty() || !abre.matches(horaRegex)) {
+            throw new FormatoDeHoraException();
+        }
+        if (fecha.isEmpty() || !fecha.matches(horaRegex)) {
+            throw new FormatoDeHoraException();
+        }
+
+        String[] horaAbre = abre.split(":");
+        String[] horaFecha = fecha.split(":");
+
+        horaRegex = "^([01]\\d|2[0-3]):([0-5]\\d)$";
+        if (!abre.matches(horaRegex) || !fecha.matches(horaRegex)) {
+            throw new HorarioInvalidoException();
+        }
+
+        if (Integer.parseInt(horaFecha[0]) == Integer.parseInt(horaAbre[0])) {
+            if (Integer.parseInt(horaFecha[1]) < Integer.parseInt(horaAbre[1])) {
+                throw new HorarioInvalidoException();
+            }
+        } else if (Integer.parseInt(horaFecha[0]) < Integer.parseInt(horaAbre[0])) {
+            throw new HorarioInvalidoException();
         }
     }
 

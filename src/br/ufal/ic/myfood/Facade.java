@@ -1,5 +1,6 @@
 package br.ufal.ic.myfood;
 
+import br.ufal.ic.myfood.exceptions.FormatoDeHoraException;
 import br.ufal.ic.myfood.managers.EmpresaManager;
 import br.ufal.ic.myfood.managers.PedidoManager;
 import br.ufal.ic.myfood.managers.ProdutoManager;
@@ -64,6 +65,16 @@ public class Facade {
     public String criarEmpresa(String tipo, String dono, String nome, String endereco, String tipoCozinha)
             throws Exception {
         return eManager.criarEmpresa(tipo, dono, nome, endereco, tipoCozinha);
+    }
+
+    public String criarEmpresa(String tipo, String dono, String nome, String endereco,
+                               String abre, String fecha, String tipoMercado)
+            throws Exception {
+        return eManager.criarEmpresa(tipo, dono, nome, endereco, abre, fecha, tipoMercado);
+    }
+
+    public void alterarFuncionamento(String idMercado, String abre, String fecha) throws Exception{
+        eManager.alterarFuncionamento(idMercado, abre, fecha);
     }
 
     public String getEmpresasDoUsuario(String idDono) throws Exception{
