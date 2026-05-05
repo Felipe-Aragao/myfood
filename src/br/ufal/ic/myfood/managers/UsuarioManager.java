@@ -51,7 +51,7 @@ public class UsuarioManager {
                 .orElseThrow(UsuarioNaoExisteException::new);
     }
 
-    private void validarUsuario(String email, String nome, String senha, String endereco) throws Exception {
+    public void validarUsuario(String email, String nome, String senha, String endereco) throws Exception {
 
         if (nome == null || nome.isBlank()) {
             throw new NomeInvalidoException();

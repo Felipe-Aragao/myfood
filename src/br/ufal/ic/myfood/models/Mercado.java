@@ -2,9 +2,9 @@ package br.ufal.ic.myfood.models;
 
 public class Mercado extends Empresa{
 
-    String abre;
-    String fecha;
-    String tipoMercado;
+    private String abre;
+    private String fecha;
+    private String tipoMercado;
 
     public Mercado(String tipo, String nome, String dono, String endereco, String abre, String fecha, String tipoMercado) {
         super(tipo, nome, dono, endereco);

@@ -2,8 +2,8 @@ package br.ufal.ic.myfood.models;
 
 public class Entregador extends Usuario{
 
-    String veiculo;
-    String placa;
+    private String veiculo;
+    private String placa;
 
     public Entregador(String nome, String email, String senha, String endereco, String veiculo, String placa) {
         super(nome, email, senha, endereco);

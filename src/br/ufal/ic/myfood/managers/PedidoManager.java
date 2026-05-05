@@ -4,10 +4,7 @@ import br.ufal.ic.myfood.exceptions.*;
 import br.ufal.ic.myfood.models.*;
 import br.ufal.ic.myfood.utils.Persistencia;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PedidoManager {
@@ -159,5 +156,9 @@ public class PedidoManager {
         Pedido pedido = findPedido(idPedido).orElseThrow(PedidoNaoEncontradoException::new);
 
         pedido.setEstado("preparando");
+    }
+
+    public List<Pedido> getPedidosList() {
+        return pedidos;
     }
 }

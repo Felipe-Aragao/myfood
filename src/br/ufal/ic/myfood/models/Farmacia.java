@@ -2,8 +2,8 @@ package br.ufal.ic.myfood.models;
 
 public class Farmacia extends Empresa{
 
-    boolean aberto24horas;
-    int numeroFuncionarios;
+    private boolean aberto24horas;
+    private int numeroFuncionarios;
 
     public Farmacia(String tipo, String dono, String name, String endereco, boolean horas24, int numeroFuncionarios) {
         super(tipo, dono, name, endereco);
