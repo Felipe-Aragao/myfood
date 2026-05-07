@@ -1,4 +1,4 @@
-[PDF](https://drive.google.com/file/d/119Rad6OCf5qK9NlaDu37Ovxx3-TWtX1i/view?usp=sharing)
+[PDF](https://drive.google.com/file/d/1JmshmRn07BVDJvt-7aPNNfSUavl_HFQJ/view?usp=sharing)
 
 # MyFood
 
@@ -42,7 +42,7 @@ Roda os testes do EasyAccept e define a Facade como interface do sistema.
 
 ### Facade
 
-A Facade instancia os Managers: `UsuarioManager`, `EmpresaManager`, `ProdutoManager` e `PedidoManager`, e depois recebe os comandos e envia esses comandos ao Manager correto .
+A Facade instancia os Managers: `UsuarioManager`, `EmpresaManager`, `ProdutoManager`, `PedidoManager` e `EntregaManager`, e depois recebe os comandos e envia esses comandos ao Manager correto.
 
 A Facade é responsável pelo ciclo de vida do sistema, a partir dos métodos:
 - **encerrarSistema** - Salva os dados e encerra o sistema.
@@ -53,11 +53,13 @@ A Facade é responsável pelo ciclo de vida do sistema, a partir dos métodos:
 - **`UsuarioManager`**
     - Criação e consulta de atributos de usuários, Login, validações 
     - Persistência em `data/usuarios.xml` (Usando `utils/Persistencia.java`)
+    - Usuários podem ser Cliente, Dono ou Entregador
 
 - **`EmpresaManager`**
     - Criação e consulta de atributos de empresas, validações
     - Persistência em `data/empresas.xml` (Usando `utils/Persistencia.java`)
     - Depende de `UsuarioManager`
+    - Empresas podem ser Restaurante, Mercado ou Farmácia
 
 - **`ProdutoManager`**
     - Criação, edição e listagem de produtos
@@ -69,14 +71,24 @@ A Facade é responsável pelo ciclo de vida do sistema, a partir dos métodos:
     - Persistência em `data/pedidos.xml` (Usando `utils/Persistencia.java`)
     - Depende de `UsuarioManager` e `EmpresaManager`
 
+- **`EntregaManager`**
+  - Criação de entregas
+  - Persistência em `data/entregas.xml` (Usando `utils/Persistencia.java`)
+  - Depende de `UsuarioManager`, `EmpresaManager` e `PedidoManager` 
+
 ### Models
 
 - `Usuario`
     - `Cliente`
     - `Dono`
+    - `Entregador`
 - `Empresa`
+  - `Restaurante`
+  - `Mercado`
+  - `Farmácia`
 - `Produto`
 - `Pedido`
+- `Entrega`
 
 Atributos e getters/setters
 
@@ -101,15 +113,22 @@ No projeto, esse padrão resolve a necessidade de fornecer uma API simples para 
 
 A oportunidade do uso surge ao perceber que sem isso, seria necessário o "cliente" externo conhecer todos os managers, instanciá-los na ordem correta e gerenciar as dependências manualmente.
 
-A classe Facade constrói os quatro managers no construtor com as dependências corretas e expõe métodos que delegam para o manager adequado: operações de usuário vão para UsuarioManager, de empresa para EmpresaManager, de produto para ProdutoManager e de pedido para PedidoManager
+A classe Facade constrói os cinco managers no construtor com as dependências corretas e expõe métodos que delegam para o manager adequado: operações de usuário vão para UsuarioManager, de empresa para EmpresaManager, de produto para ProdutoManager, de pedido para PedidoManager e de entrega para EntregaManager
 
 ```java
 public void criarUsuario(String nome, String email, String senha, String endereco) 
     throws Exception {
-    uManager.criarUsuario(nome, email, senha, endereco);
+    usuarioManager.criarUsuario(nome, email, senha, endereco);
 }
 ```
-No exemplo acima mostra que ao criarUsuario é chamado a Facade delega o trabalho ao `UsuarioManager`(`uManager`). Não existe necessidade dos testes saberem como funciona o sistema internamente. 
+No exemplo acima mostra que ao "criarUsuario" é chamado a Facade delega o trabalho ao `UsuarioManager`. Não existe necessidade dos testes saberem como funciona o sistema internamente.
+
+```java
+public void entregar(String idEntrega) throws Exception {
+        entregaManager.entregar(idEntrega);
+    }
+```
+No exemplo acima mostra que ao "entregar" é chamado a Facade delega o trabalho ao `EntregaManager`.
 
 ---
 
