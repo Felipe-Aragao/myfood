@@ -4,17 +4,15 @@ import br.ufal.ic.myfood.exceptions.*;
 import br.ufal.ic.myfood.models.*;
 import br.ufal.ic.myfood.utils.Persistencia;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EmpresaManager {
 
     private List<Empresa> empresas;
-    private UsuarioManager uManager;
+    private final UsuarioManager uManager;
     private static final String ARQUIVO_EMPRESA = "data/empresas.xml";
 
     // Construtor

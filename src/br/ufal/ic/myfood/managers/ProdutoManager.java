@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class ProdutoManager {
 
-    private EmpresaManager eManager;
+    private final EmpresaManager eManager;
 
     public ProdutoManager(EmpresaManager eManager) {
         this.eManager = eManager;

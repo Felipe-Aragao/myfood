@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 public class EntregaManager {
 
-    private UsuarioManager usuarioManager;
-    private EmpresaManager empresaManager;
-    private PedidoManager pedidoManager;
+    private final UsuarioManager usuarioManager;
+    private final EmpresaManager empresaManager;
+    private final PedidoManager pedidoManager;
     private static final String ARQUIVO_PEDIDO = "data/entregas.xml";
 
     private List<Entrega> entregas;

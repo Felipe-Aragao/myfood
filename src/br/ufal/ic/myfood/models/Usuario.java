@@ -1,7 +1,5 @@
 package br.ufal.ic.myfood.models;
 
-import br.ufal.ic.myfood.exceptions.AtributoInvalidoException;
-
 import java.util.UUID;
 
 public class Usuario {

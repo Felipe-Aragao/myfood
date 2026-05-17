@@ -9,7 +9,7 @@ public class Dono extends Usuario{
         this.cpf = cpf;
     }
 
-    public Dono() {};
+    public Dono() {}
 
     public String getCpf() {
         return cpf;

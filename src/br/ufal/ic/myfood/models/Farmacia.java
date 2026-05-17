@@ -11,7 +11,7 @@ public class Farmacia extends Empresa{
         this.numeroFuncionarios = numeroFuncionarios;
     }
 
-    public Farmacia() {};
+    public Farmacia() {}
 
     public boolean isAberto24horas() {
         return aberto24horas;

@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class PedidoManager {
 
-    private UsuarioManager uManager;
-    private EmpresaManager eManager;
+    private final UsuarioManager uManager;
+    private final EmpresaManager eManager;
     private static final String ARQUIVO_PEDIDO = "data/pedidos.xml";
 
 
